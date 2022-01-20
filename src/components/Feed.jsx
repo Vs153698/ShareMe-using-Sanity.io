@@ -20,6 +20,7 @@ const Feed = () => {
    }else{
     client.fetch(FeedQuery).then((data)=>{
       setPins(data)
+      console.log(data);
       setloading(false)
     })
    }
