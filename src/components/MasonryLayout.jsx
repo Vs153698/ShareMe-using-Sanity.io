@@ -9,6 +9,7 @@ const breakpoints = {
     500:1
 }
 const MasonryLayout = ({Pins}) => {
+    console.log('log from masonart'.Pins);
   return <div>
       <Masonry className='flex animate-slide-fwd' breakpointCols={breakpoints}>
           {Pins?.map((pin)=>(

@@ -9,9 +9,10 @@ import { fetchUser } from "../utils/fetchuser";
 const Pin = ({ pin: { postedBy, image, _id, destination,save } }) => {
     const [PostHovered, setPostHovered] = useState(false);
     const navigate = useNavigate()
-    console.log(postedBy);
+    console.log('data is',postedBy);
     const user = fetchUser()
-    const alreadySaved = !!(save?.filter((item)=> item.postedBy._id === user.googleId))?.length
+    console.log("save is ",save);
+    const alreadySaved = !!(save?.filter((item)=> item?.postedBy?._id === user?.googleId))?.length
     // 1, [2,3,1] -> [1].length -> 1 -> !1 -> false -> !false -> true 
     // 4, [2,3,1] -> [].length -> 0 !0 -> true -> !true -> false 
     // we added !! for making this boolean
