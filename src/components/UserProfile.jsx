@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleLogout } from 'react-google-login';
 import { AiOutlineLogout } from 'react-icons/ai'
+import { MdCenterFocusStrong } from 'react-icons/md';
 import { useParams, useNavigate } from 'react-router-dom'
 import { client } from '../client';
 import { userCreatedPinsQuery, userQuery, userSavedPinsQuery } from '../utils/data'
@@ -23,20 +24,20 @@ const UserProfile = () => {
     })
   }, [userId]);
   useEffect(() => {
-    if(text==='Created'){
+    if (text === 'Created') {
       const createdpinsquery = userCreatedPinsQuery(userId)
-      client.fetch(createdpinsquery).then((data)=>{
+      client.fetch(createdpinsquery).then((data) => {
         setpins(data)
       })
-    }else{
+    } else {
       const savedpinsquery = userSavedPinsQuery(userId)
-      client.fetch(savedpinsquery).then((data)=>{
+      client.fetch(savedpinsquery).then((data) => {
         setpins(data)
       })
 
     }
-  }, [text,userId]);
-  
+  }, [text, userId]);
+
   const logout = () => {
     localStorage.clear()
     navigate('/login')
@@ -46,7 +47,7 @@ const UserProfile = () => {
       <Spinner message='Loading Profile' />
     )
   }
-console.log('user_id',JSON.parse(localStorage.getItem('user')));
+  console.log('user_id', JSON.parse(localStorage.getItem('user')));
   return <div className='relative pb-2 h-full justify-center items-center' >
     <div className="flex flex-col pb-5">
       <div className="relative flex flex-col mb-7">
@@ -61,18 +62,18 @@ console.log('user_id',JSON.parse(localStorage.getItem('user')));
           </div>
         </div>
         <div className="text-center mb-7">
-          <button type='button' onClick={(e)=>{
+          <button type='button' onClick={(e) => {
             settext(e.target.textContent)
             setactivateBtn('created')
-          }} className={`${activateBtn === 'created' ? activeBtnStyles : notActiveBtnStyles }`}>Created</button>
-          <button type='button' onClick={(e)=>{
+          }} className={`${activateBtn === 'created' ? activeBtnStyles : notActiveBtnStyles}`}>Created</button>
+          <button type='button' onClick={(e) => {
             settext(e.target.textContent)
             setactivateBtn('saved')
-          }} className={`${activateBtn === 'saved' ? activeBtnStyles : notActiveBtnStyles }`}>Saved</button>
+          }} className={`${activateBtn === 'saved' ? activeBtnStyles : notActiveBtnStyles}`}>Saved</button>
         </div>
-        <div className="px-2">
-        <MasonryLayout Pins={pins}/>
-        </div>
+        {pins?.length ? <div className="px-2">
+          <MasonryLayout Pins={pins} />
+        </div>: <div className='flex justify-center font-bold items-center w-full text-xl mt-2'>You haven't created any pin till now !</div>}
       </div>
     </div>
 
