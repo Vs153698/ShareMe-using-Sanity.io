@@ -61,7 +61,7 @@ const Pin = ({ pin: { postedBy, image, _id, destination,save } }) => {
                           e.stopPropagation();
                           savePinfunc(_id)
 
-                      }} type="button" className="bg-red-500 opacity-70 hover:opacity-100 text-white fontbold p-2 text-base rounded-full hover:shadow-md outlined-none flex items-center justify-center"><AiOutlineHeart/></button>
+                      }} type="button" className="bg-red-500 opacity-70 hover:opacity-100 text-white fontbold p-2 text-base rounded-full hover:shadow-md outlined-none flex items-center justify-center"><AiOutlineHeart/> </button>
                   )}
               </div>
               <div className="flex justify-between items-center gap-2 w-full">
@@ -82,7 +82,7 @@ const Pin = ({ pin: { postedBy, image, _id, destination,save } }) => {
 
       </div>
     
-      <Link to={`user-profile/${postedBy?._id}`} className="flex gap-2 mt-2 items-center">
+      <Link to={`/user-profile/${postedBy?._id}`} className="flex gap-2 mt-2 items-center">
           <img src={postedBy?.image} className='w-8 h-8 rounded-full object-cover' alt="user-profile" />
           <p className='font-semibold capitalize'>{postedBy?.username} </p>
       </Link>

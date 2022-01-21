@@ -6,7 +6,7 @@ import { client, urlFor } from '../client';
 import MasonryLayout from './MasonryLayout';
 import { pinDetailMorePinQuery, pinDetailQuery } from '../utils/data';
 import Spinner from './Spinner';
-import { AiFillHeart } from 'react-icons/ai';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 const PinDetail = ({ user }) => {
   const [pins, setPins] = useState(null);
   const [pinDetail, setPinDetail] = useState(null);
@@ -14,23 +14,24 @@ const PinDetail = ({ user }) => {
   const [addingcomment, setAddingcomment] = useState(false);
   const { pinId } = useParams()
   console.log(pinId);
-  const addcomment =()=>{
+  
+  const addcomment = () => {
     if (comment) {
       setAddingcomment(true)
       client.patch(pinId)
-      .setIfMissing({comments:[]})
-      .insert('after','comments[-1]',[{
-        comment,
-        _key:uuidv4(),
-        postedBy:{
-          _type:'postedBy',
-          _ref:user._id
-        }
-      }]).commit().then(()=>{
-        fetchPinDetails();
-        setComment('')
-        setAddingcomment(false)
-      })
+        .setIfMissing({ comments: [] })
+        .insert('after', 'comments[-1]', [{
+          comment,
+          _key: uuidv4(),
+          postedBy: {
+            _type: 'postedBy',
+            _ref: user._id
+          }
+        }]).commit().then(() => {
+          fetchPinDetails();
+          setComment('')
+          setAddingcomment(false)
+        })
     }
   }
   const fetchPinDetails = () => {
@@ -47,20 +48,20 @@ const PinDetail = ({ user }) => {
   }
   useEffect(() => {
     fetchPinDetails()
-    console.log("pin details ",pinDetail);
+    console.log("pin details ", pinDetail);
   }, [pinId]);
 
   if (!pinDetail) {
     return <Spinner />
   }
-  return <div className='flex xl:flex-row flex-col m-auto bg-white' style={{ maxWidth: '1500px', borderRadius: '32px' }}>
+  return <><div className='flex xl:flex-row flex-col m-auto bg-white' style={{ maxWidth: '1500px', borderRadius: '32px' }}>
     <div className="flex justify-center items-center md:items-start flex-initial">
       <img src={pinDetail?.image && urlFor(pinDetail.image).url()} alt="user-post" className='rounded-t-3xl rounded-b-lg' />
     </div>
     <div className="w-full p-5 flex-1 xl:min-w-620">
       <div className="flex items-center justify-between">
         <div className="flex gap-2 items-center">
-          <a href={`${pinDetail.image.asset.url}?dl=`} className="bg-secondaryColor p-2 text-xl rounded-full flex items-center justify-center text-dark opacity-75 hover:opacity-100" download onClick={(e) => e.stopPropagation()}><MdDownloadForOffline  color="green" fontSize={25} /></a>
+          <a href={`${pinDetail.image.asset.url}?dl=`} className="bg-secondaryColor p-2 text-xl rounded-full flex items-center justify-center text-dark opacity-75 hover:opacity-100" download onClick={(e) => e.stopPropagation()}><MdDownloadForOffline color="green" fontSize={25} /></a>
         </div>
         {pinDetail.destination && <a href={pinDetail.destination} target='_blank' rel='noreferrer'>
           {pinDetail.destination}
@@ -71,13 +72,14 @@ const PinDetail = ({ user }) => {
         <p className='mt-3'>{pinDetail.about}</p>
       </div>
       <Link to={`/user-profile/${pinDetail.postedBy?._id}`} className="flex gap-2 mt-5 items-center bg-white rounded-lg">
-          <img src={pinDetail.postedBy?.image} className='w-8 h-8 rounded-full object-cover' alt="user-profile" />
-          <p className='font-semibold capitalize'>{pinDetail.postedBy?.username} </p>
+        <img src={pinDetail.postedBy?.image} className='w-8 h-8 rounded-full object-cover' alt="user-profile" />
+        <p className='font-semibold capitalize'>{pinDetail.postedBy?.username} </p>
       </Link>
-      <h3 className='flex items-center pt-3 font-bold'><AiFillHeart color='red' fontSize={25}/>  {pinDetail.save?.length ? pinDetail.save?.length : 0}</h3>
+      <h3 className='flex items-center pt-3 font-bold'><AiFillHeart className='mr-2' color='red' fontSize={25}/>  {pinDetail.save?.length ? pinDetail.save?.length : 0}</h3>
+      
       <h2 className='mt-5 text-2xl'>Comments</h2>
       <div className="max-h-370 overflow-y-auto">
-        {pinDetail?.comments?.map((comment,i)=>(
+        {pinDetail?.comments?.map((comment, i) => (
           <div className="flex gap-2 mt-5 items-center bg-white rounded-lg" key={i}>
             <img src={comment.postedBy.image} alt="userprofile" className='w-10 h-10 rounded-full cursor-pointer' />
             <div className="flex flex-col">
@@ -88,16 +90,28 @@ const PinDetail = ({ user }) => {
         ))}
       </div>
       <div className="flex flex-wrap mt-6 gap-3">
-      <Link to={`/user-profile/${user?._id}`} className="flex gap-2 items-center bg-white rounded-lg">
+        <Link to={`/user-profile/${user?._id}`} className="flex gap-2 items-center bg-white rounded-lg">
           <img src={user?.image} className='w-8 h-8 rounded-full cursor-pointer' alt="user-profile" />
-      </Link>
-      <input type="text" className='flex-1 border-gray-100 outline-none border-2 p-3 rounded-2xl focus:boder-gray-300' placeholder='Add a comment' value={comment} onChange={(e)=>setComment(e.target.value)} />
-      <button type='button' onClick={addcomment} className='bg-red-500 text-white rounded-full px-6 py-2 font-semibold text-base outline-none'>
-        {addingcomment ? 'Posting the comment...': 'Post'}
-      </button>
+        </Link>
+        <input type="text" className='flex-1 border-gray-100 outline-none border-2 p-3 rounded-2xl focus:boder-gray-300' placeholder='Add a comment' value={comment} onChange={(e) => setComment(e.target.value)} />
+        <button type='button' onClick={addcomment} className='bg-red-500 text-white rounded-full px-6 py-2 font-semibold text-base outline-none'>
+          {addingcomment ? 'Posting the comment...' : 'Post'}
+        </button>
       </div>
     </div>
-  </div>;
+  </div>
+  {pins ? (
+    <>
+    <h2 className="text-center font-bold text-2xl mt-8 mb-4">
+      More like this
+    </h2>
+    {pins?.length === 0 && <p className="text-center text-1xl mt-8 mb-4">
+      Unable to find matched pins
+    </p>}
+    <MasonryLayout Pins = {pins}/>
+    </>
+  ):(<Spinner message='Loading more like this'/>)};
+  </>
 };
 
 export default PinDetail;
